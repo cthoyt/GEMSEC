@@ -1,5 +1,5 @@
 GEMSEC - Graph Embedding with Self Clustering
-=============================================
+============================================
 <p align="justify">
 GEMSEC is a graph embedding algorithm which learns an embedding and clustering jointly. The procedure places nodes in an abstract feature space where the vertex features minimize the negative log likelihood of preserving sampled vertex neighborhoods while the nodes are clustered into a fixed number of groups in this space. GEMSEC is a general extension of earlier work in the domain as it is an augmentation of the core optimization problem of sequence based graph embedding procedures and it is agnostic of the neighborhood sampling strategy (first/second-order random walks).
   
@@ -15,17 +15,17 @@ This repository provides a reference implementation for GEMSEC as described in t
 > arXiv, 2018.
 >https://arxiv.org/abs/1802.03997
 
-### Table of Contents
+## Table of Contents
 
 1. [Citing](#citing)  
-2. [Requirements](#requirements)
+2. [Installation](#installation)
 3. [Datasets](#datasets)  
 4. [Logging](#logging)  
 5. [Options](#options) 
 6. [Examples](#examples)  
 7. [Related Papers](#related-papers)  
 
-### Citing
+## Citing
 
 If you find GEMSEC useful in your research, please consider citing the following paper:
 
@@ -36,9 +36,26 @@ If you find GEMSEC useful in your research, please consider citing the following
        eprint = {arXiv:1802.03997}
        }
 
+## Installation
+
+`GEMSEC` can be installed using `pip` with the following command:
+
+```bash
+$ pip install git+https://github.com/benedekrozemberczki/GEMSEC.git
+```
+
+`GEMSEC` can be installed (in editable mode with `-e`) from the source with the following commands:
+
+```bash
+$ git clone https://github.com/benedekrozemberczki/GEMSEC.git
+$ cd GEMSEC
+$ pip install -e .
+```
+
 ### Requirements
 
 The codebase is implemented in Python 3.5.2 | Anaconda 4.2.0 (64-bit). Package versions used for development are just below.
+
 ```
 networkx          1.11
 tqdm              4.19.5
@@ -50,11 +67,11 @@ texttable         1.5.1
 python-louvain    0.11
 ```
 
-### Datasets
+## Datasets
 
 The code takes an input graph in a csv file. Every row indicates an edge between two nodes separated by a comma. The first row is a header. Nodes should be indexed starting with 0. Sample graphs for the `Facebook Politicians` and `Facebook Companies` datasets are included in the  `data/` directory.
 
-### Logging
+## Logging
 
 The models are defined in a way that parameter settings and cluster quality is logged in every single epoch. Specifically we log the followings:
 
@@ -65,11 +82,11 @@ The models are defined in a way that parameter settings and cluster quality is l
 4. Runtime.                     We measure the time needed for optimization and data generation per epoch -- measured by seconds.
 ```
 
-### Options
+## Options
 
 Learning of the embedding is handled by the `src/embedding_clustering.py` script which provides the following command line arguments.
 
-#### Input and output options
+### Input and output options
 
 ```
   --input                STR      Input graph path.                              Default is `data/politician_edges.csv`.
@@ -82,7 +99,7 @@ Learning of the embedding is handled by the `src/embedding_clustering.py` script
 ```
 
 
-#### Random walk options
+### Random walk options
 
 ```
   --walker   STR         Random walker order (first/second).              Default is `first`.
@@ -90,7 +107,7 @@ Learning of the embedding is handled by the `src/embedding_clustering.py` script
   --Q        FLOAT       In-out hyperparameter for second-order walk.     Default is 1.0.
 ```
 
-#### Skipgram options
+### Skipgram options
 
 ```
   --dimensions               INT        Number of dimensions.                              Default is 16.
@@ -101,7 +118,7 @@ Learning of the embedding is handled by the `src/embedding_clustering.py` script
   --negative-sample-number   INT        Number of negative samples to draw.                Default is 10.
 ```
 
-#### Model options
+### Model options
 
 ```
   --initial-learning-rate   FLOAT    Initial learning rate.                                        Default is 0.001.
@@ -114,39 +131,37 @@ Learning of the embedding is handled by the `src/embedding_clustering.py` script
   --regularization-noise    FLOAT    Uniform noise max and min on the feature vector distance.     Default is 10**-8.
 ```
 
-### Examples
+## Examples
 
 The following commands learn a graph embedding and cluster center and writes them to disk. The node representations are ordered by the ID.
 
 Creating a GEMSEC embedding of the default dataset with the default hyperparameter settings. Saving the embedding, cluster centres and the log file at the default path.
 
-```
-python src/embedding_clustering.py
+```bash
+$ python src/embedding_clustering.py
 ```
 Creating a DeepWalk embedding of the default dataset with the default hyperparameter settings. Saving the embedding, cluster centres and the log file at the default path.
 
-```
-python src/embedding_clustering.py --model DeepWalk
+```bash
+$ python src/embedding_clustering.py --model DeepWalk
 ```
 
 Turning off the model saving.
 
-```
-python src/embedding_clustering.py --dump-matrices False
+```bash
+$ python src/embedding_clustering.py --dump-matrices False
 ```
 
 Creating an embedding of an other dataset the `Facebook Companies`. Saving the output and the log in a custom place.
 
-```
-python src/embedding_clustering.py --input data/company_edges.csv  --embedding-output output/embeddings/company_embedding.csv --log-output output/cluster_means/company_means.csv --cluster-mean-output output/logs/company.json
+```bash
+$ python src/embedding_clustering.py --input data/company_edges.csv  --embedding-output output/embeddings/company_embedding.csv --log-output output/cluster_means/company_means.csv --cluster-mean-output output/logs/company.json
 ```
 
 Creating a clustered embedding of the default dataset in 32 dimensions, 20 sequences per source node with length 160 and 10 cluster centers.
 
+```bash
+$ python src/embedding_clustering.py --dimensions 32 --num-of-walks 20 --random-walk-length 160 --cluster-number 10
 ```
-python src/embedding_clustering.py --dimensions 32 --num-of-walks 20 --random-walk-length 160 --cluster-number 10
-```
 
-### Related papers
-
-
+## Related papers
